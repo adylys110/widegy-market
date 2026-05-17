@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// PATCH /api/users/profile — update name, phone, bio
+// PATCH /api/users/profile â€” update name, phone, bio
 export async function PATCH(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -26,3 +28,4 @@ export async function PATCH(req: Request) {
 
   return NextResponse.json({ user: updated })
 }
+

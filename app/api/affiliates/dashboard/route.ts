@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/affiliates/dashboard — statistik & data dashboard affiliator
+// GET /api/affiliates/dashboard â€” statistik & data dashboard affiliator
 export async function GET(req: NextRequest) {
   try {
     const session = await auth()
@@ -112,3 +114,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

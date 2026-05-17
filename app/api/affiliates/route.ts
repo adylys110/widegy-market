@@ -1,9 +1,11 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { generateReferralCode } from '@/lib/utils'
 
-// POST /api/affiliates — setup affiliator profile
+// POST /api/affiliates â€” setup affiliator profile
 // Bisa diakses setelah user upgrade role ke AFFILIATOR atau SELLER ingin tambah affiliate
 export async function POST(req: NextRequest) {
   try {
@@ -69,7 +71,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/affiliates — get profile
+// GET /api/affiliates â€” get profile
 export async function GET(req: NextRequest) {
   try {
     const session = await auth()
@@ -85,3 +87,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

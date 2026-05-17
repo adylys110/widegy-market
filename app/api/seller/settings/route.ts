@@ -1,9 +1,11 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
-// PUT /api/seller/settings — update seller profile info
+// PUT /api/seller/settings â€” update seller profile info
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth()
@@ -96,3 +98,4 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

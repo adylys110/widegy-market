@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
@@ -17,7 +19,7 @@ function verifySignature(
   return hash === signatureKey
 }
 
-// POST /api/payments/notification — Midtrans webhook
+// POST /api/payments/notification â€” Midtrans webhook
 export async function POST(req: Request) {
   const body = await req.json()
   const {
@@ -100,7 +102,7 @@ export async function POST(req: Request) {
       })
     }
 
-    // Jika PAID → proses seluruh fulfillment digital
+    // Jika PAID â†’ proses seluruh fulfillment digital
     if (orderStatus === 'PAID') {
       // 1. Update buyer profile stats
       await tx.buyerProfile.upsert({
@@ -147,7 +149,7 @@ export async function POST(req: Request) {
         }
       }
 
-      // 3. Update affiliate commissions → APPROVED + tambah balance affiliator
+      // 3. Update affiliate commissions â†’ APPROVED + tambah balance affiliator
       const affiliateCommissions = await tx.affiliateCommission.findMany({
         where: { orderId: order.id, status: 'PENDING' },
       })
@@ -169,7 +171,7 @@ export async function POST(req: Request) {
         })
       }
 
-      // 4. Langsung set order ke COMPLETED (digital goods — instant delivery)
+      // 4. Langsung set order ke COMPLETED (digital goods â€” instant delivery)
       await tx.order.update({
         where: { id: order.id },
         data: { status: 'COMPLETED' },
@@ -180,7 +182,7 @@ export async function POST(req: Request) {
         data: {
           userId: order.userId,
           type: 'PAYMENT',
-          title: 'Pembayaran Berhasil! 🎉',
+          title: 'Pembayaran Berhasil! ðŸŽ‰',
           message: `Order #${order.orderNumber} telah lunas. Produk siap didownload.`,
           data: { orderId: order.id },
         },
@@ -199,7 +201,7 @@ export async function POST(req: Request) {
             data: {
               userId: sellerProfile.userId,
               type: 'ORDER',
-              title: 'Pesanan Baru! 🛍️',
+              title: 'Pesanan Baru! ðŸ›ï¸',
               message: `Kamu mendapat pesanan baru (${sellerItems.length} produk). Cek dashboard seller.`,
               data: { orderId: order.id },
             },
@@ -208,7 +210,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // Jika REFUNDED — kembalikan commission status ke REJECTED
+    // Jika REFUNDED â€” kembalikan commission status ke REJECTED
     if (orderStatus === 'REFUNDED') {
       const approvedCommissions = await tx.affiliateCommission.findMany({
         where: { orderId: order.id, status: 'APPROVED' },
@@ -233,3 +235,4 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ message: 'OK' })
 }
+

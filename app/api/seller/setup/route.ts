@@ -1,9 +1,11 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
-// POST /api/seller/setup — create seller profile
+// POST /api/seller/setup â€” create seller profile
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
@@ -50,7 +52,7 @@ export async function POST(req: NextRequest) {
       data: {
         userId: session.user.id,
         type: 'SYSTEM',
-        title: 'Selamat datang di Widegy Seller! 🎉',
+        title: 'Selamat datang di Widegy Seller! ðŸŽ‰',
         message: `Toko "${storeName}" berhasil dibuat. Mulai upload produk pertamamu dan raih penghasilan!`,
       },
     })
@@ -61,3 +63,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

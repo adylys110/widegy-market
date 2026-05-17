@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -28,13 +30,13 @@ export async function GET(req: NextRequest) {
   if (status === 'ACTIVE') where.isBanned = false
   if (status === 'BANNED') where.isBanned = true
 
-  // ── Basic include for all roles ──────────────────────────────────
+  // â”€â”€ Basic include for all roles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const baseSelect: any = {
     id: true, name: true, email: true, image: true,
     role: true, isActive: true, isBanned: true, createdAt: true,
   }
 
-  // ── Role-specific includes ───────────────────────────────────────
+  // â”€â”€ Role-specific includes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (role === 'SELLER') {
     baseSelect.sellerProfile = {
       select: {
@@ -64,7 +66,7 @@ export async function GET(req: NextRequest) {
     prisma.user.count({ where }),
   ])
 
-  // ── Compute aggregated stats if requested ────────────────────────
+  // â”€â”€ Compute aggregated stats if requested â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   let stats: any = null
   if (withStats && role !== 'ALL') {
     const now = new Date()
@@ -111,3 +113,4 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ users, total, stats })
 }
+

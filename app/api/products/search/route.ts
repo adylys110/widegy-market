@@ -1,7 +1,9 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/products/search?q=xxx&limit=5 — autocomplete/search suggestions
+// GET /api/products/search?q=xxx&limit=5 â€” autocomplete/search suggestions
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q')?.trim()
@@ -64,3 +66,4 @@ export async function GET(req: Request) {
     total: products.length,
   })
 }
+

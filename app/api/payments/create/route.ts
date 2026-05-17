@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -8,7 +10,7 @@ const MIDTRANS_SNAP_URL = MIDTRANS_IS_PRODUCTION
   ? 'https://app.midtrans.com/snap/v1/transactions'
   : 'https://app.sandbox.midtrans.com/snap/v1/transactions'
 
-// POST /api/payments/create — buat snap token Midtrans
+// POST /api/payments/create â€” buat snap token Midtrans
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -132,3 +134,4 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ snapToken: token, redirectUrl: redirect_url })
 }
+

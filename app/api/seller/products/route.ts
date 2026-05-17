@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -24,7 +26,7 @@ const productSchema = z.object({
   status: z.enum(['DRAFT', 'PENDING_REVIEW']).default('DRAFT'),
 })
 
-// GET /api/seller/products — list seller products
+// GET /api/seller/products â€” list seller products
 export async function GET(req: NextRequest) {
   try {
     const session = await auth()
@@ -53,7 +55,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/seller/products — create new product
+// POST /api/seller/products â€” create new product
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
@@ -115,3 +117,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

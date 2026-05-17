@@ -1,9 +1,11 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
-// Server-side schema — no confirmPassword needed
+// Server-side schema â€” no confirmPassword needed
 const registerServerSchema = z.object({
   name: z
     .string()
@@ -76,3 +78,4 @@ export async function POST(req: Request) {
     )
   }
 }
+

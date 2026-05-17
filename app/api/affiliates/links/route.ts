@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -7,7 +9,7 @@ function generateLinkId(length = 8): string {
   return randomBytes(length).toString('base64url').slice(0, length)
 }
 
-// GET /api/affiliates/links — list links
+// GET /api/affiliates/links â€” list links
 export async function GET(req: NextRequest) {
   try {
     const session = await auth()
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/affiliates/links — create link
+// POST /api/affiliates/links â€” create link
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
@@ -91,3 +93,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

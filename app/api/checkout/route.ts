@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -8,7 +10,7 @@ function generateOrderNumber(): string {
   return `WDG-${timestamp}-${random}`
 }
 
-// POST /api/checkout — buat order dari cart
+// POST /api/checkout â€” buat order dari cart
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -179,3 +181,4 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ orderId: order.id, orderNumber: order.orderNumber }, { status: 201 })
 }
+

@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -30,7 +32,7 @@ export async function POST(req: Request) {
       if (currentRole === 'SELLER') {
         return NextResponse.json({ error: 'Kamu sudah terdaftar sebagai seller' }, { status: 400 })
       }
-      // Buyer → Seller
+      // Buyer â†’ Seller
       await prisma.user.update({
         where: { id: session.user.id },
         data: { role: 'SELLER' },
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
       }
 
       if (currentRole === 'BUYER') {
-        // Buyer → Affiliator: update role ke AFFILIATOR
+        // Buyer â†’ Affiliator: update role ke AFFILIATOR
         await prisma.user.update({
           where: { id: session.user.id },
           data: { role: 'AFFILIATOR' },
@@ -81,3 +83,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Terjadi kesalahan server' }, { status: 500 })
   }
 }
+

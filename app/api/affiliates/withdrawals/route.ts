@@ -1,10 +1,12 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
 const MIN_WITHDRAW = 50_000
 
-// POST /api/affiliates/withdrawals — create withdrawal request
+// POST /api/affiliates/withdrawals â€” create withdrawal request
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/affiliates/withdrawals — list withdrawals
+// GET /api/affiliates/withdrawals â€” list withdrawals
 export async function GET(req: NextRequest) {
   try {
     const session = await auth()
@@ -85,3 +87,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

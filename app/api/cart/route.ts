@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/cart — ambil semua cart items milik user
+// GET /api/cart â€” ambil semua cart items milik user
 export async function GET() {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -30,7 +32,7 @@ export async function GET() {
   return NextResponse.json({ items })
 }
 
-// POST /api/cart — tambah item ke cart
+// POST /api/cart â€” tambah item ke cart
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -50,7 +52,7 @@ export async function POST(req: Request) {
   return NextResponse.json({ item }, { status: 201 })
 }
 
-// DELETE /api/cart — hapus semua cart items
+// DELETE /api/cart â€” hapus semua cart items
 export async function DELETE() {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -58,3 +60,4 @@ export async function DELETE() {
   await prisma.cartItem.deleteMany({ where: { userId: session.user.id } })
   return NextResponse.json({ message: 'Keranjang dikosongkan' })
 }
+

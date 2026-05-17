@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// POST /api/reviews — submit review produk (harus sudah beli)
+// POST /api/reviews â€” submit review produk (harus sudah beli)
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -75,7 +77,7 @@ export async function POST(req: Request) {
       data: {
         userId: product.seller.userId,
         type: 'REVIEW',
-        title: 'Review Baru! ⭐',
+        title: 'Review Baru! â­',
         message: `Produk "${product.title}" mendapat ulasan ${rating} bintang.`,
         data: { productId, reviewId: review.id },
       },
@@ -129,3 +131,4 @@ export async function GET(req: Request) {
 
   return NextResponse.json({ reviews, total, totalPages: Math.ceil(total / limit) })
 }
+

@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
 
-// GET /api/affiliates/track?ref=CODE&productId=xxx — track affiliate click
+// GET /api/affiliates/track?ref=CODE&productId=xxx â€” track affiliate click
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const ref = searchParams.get('ref')
@@ -66,3 +68,4 @@ export async function GET(req: Request) {
 
   return NextResponse.json({ tracked: true, method: 'affiliate_link' })
 }
+

@@ -1,8 +1,10 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/notifications — ambil notifikasi user (latest 20)
+// GET /api/notifications â€” ambil notifikasi user (latest 20)
 export async function GET() {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -20,7 +22,7 @@ export async function GET() {
   return NextResponse.json({ notifications, unreadCount })
 }
 
-// PATCH /api/notifications — tandai semua sebagai sudah dibaca
+// PATCH /api/notifications â€” tandai semua sebagai sudah dibaca
 export async function PATCH() {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -32,3 +34,4 @@ export async function PATCH() {
 
   return NextResponse.json({ message: 'Semua notifikasi ditandai sudah dibaca' })
 }
+
