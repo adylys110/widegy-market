@@ -1,0 +1,112 @@
+
+> widegy@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.15
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (128kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/68) ...
+   Generating static pages (17/68) 
+   Generating static pages (34/68) 
+   Generating static pages (51/68) 
+ ✓ Generating static pages (68/68)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size     First Load JS
+┌ ○ /                                       147 kB          280 kB
+├ ○ /_not-found                             156 B          87.5 kB
+├ ƒ /admin/analytics                        9.58 kB         243 kB
+├ ƒ /admin/coupons                          3.47 kB         146 kB
+├ ƒ /admin/dashboard                        8.27 kB         249 kB
+├ ƒ /admin/orders                           2.51 kB         135 kB
+├ ƒ /admin/products                         5.55 kB         148 kB
+├ ƒ /admin/settings                         2.4 kB          138 kB
+├ ƒ /admin/users                            3.56 kB         146 kB
+├ ƒ /admin/withdrawals                      5 kB            147 kB
+├ ƒ /affiliator/commissions                 3.21 kB         136 kB
+├ ƒ /affiliator/dashboard                   5.11 kB         249 kB
+├ ƒ /affiliator/links                       7.15 kB         149 kB
+├ ƒ /affiliator/setup                       3.98 kB         146 kB
+├ ƒ /affiliator/withdrawals                 3.38 kB         148 kB
+├ ƒ /api/admin/coupons                      0 B                0 B
+├ ƒ /api/admin/coupons/[couponId]           0 B                0 B
+├ ƒ /api/admin/orders                       0 B                0 B
+├ ƒ /api/admin/products                     0 B                0 B
+├ ƒ /api/admin/products/[productId]/status  0 B                0 B
+├ ƒ /api/admin/settings                     0 B                0 B
+├ ƒ /api/admin/users                        0 B                0 B
+├ ƒ /api/admin/users/[userId]/ban           0 B                0 B
+├ ƒ /api/admin/withdrawals                  0 B                0 B
+├ ƒ /api/admin/withdrawals/[withdrawalId]   0 B                0 B
+├ ƒ /api/affiliates                         0 B                0 B
+├ ƒ /api/affiliates/dashboard               0 B                0 B
+├ ƒ /api/affiliates/links                   0 B                0 B
+├ ƒ /api/affiliates/links/[id]              0 B                0 B
+├ ƒ /api/affiliates/track                   0 B                0 B
+├ ƒ /api/affiliates/withdrawals             0 B                0 B
+├ ƒ /api/auth/[...nextauth]                 0 B                0 B
+├ ƒ /api/auth/register                      0 B                0 B
+├ ƒ /api/cart                               0 B                0 B
+├ ƒ /api/cart/[itemId]                      0 B                0 B
+├ ƒ /api/checkout                           0 B                0 B
+├ ƒ /api/checkout/validate-coupon           0 B                0 B
+├ ƒ /api/notifications                      0 B                0 B
+├ ƒ /api/orders                             0 B                0 B
+├ ƒ /api/orders/[id]                        0 B                0 B
+├ ƒ /api/orders/[id]/download/[itemId]      0 B                0 B
+├ ƒ /api/payments/create                    0 B                0 B
+├ ƒ /api/payments/notification              0 B                0 B
+├ ƒ /api/products/[id]                      0 B                0 B
+├ ƒ /api/products/search                    0 B                0 B
+├ ƒ /api/reviews                            0 B                0 B
+├ ƒ /api/seller/analytics                   0 B                0 B
+├ ƒ /api/seller/products                    0 B                0 B
+├ ƒ /api/seller/products/[id]               0 B                0 B
+├ ƒ /api/seller/settings                    0 B                0 B
+├ ƒ /api/seller/setup                       0 B                0 B
+├ ƒ /api/seller/withdrawals                 0 B                0 B
+├ ƒ /api/upload                             0 B                0 B
+├ ƒ /api/users/change-password              0 B                0 B
+├ ƒ /api/users/profile                      0 B                0 B
+├ ƒ /api/users/upgrade-role                 0 B                0 B
+├ ƒ /api/wishlist                           0 B                0 B
+├ ƒ /browse                                 7.73 kB         153 kB
+├ ƒ /cart                                   5.53 kB         150 kB
+├ ƒ /checkout                               6.29 kB         151 kB
+├ ƒ /dashboard                              4.77 kB         158 kB
+├ ○ /forgot-password                        2.46 kB         136 kB
+├ ○ /login                                  3.22 kB         140 kB
+├ ○ /manifest.webmanifest                   0 B                0 B
+├ ƒ /orders                                 3.63 kB         149 kB
+├ ƒ /orders/[id]                            8.19 kB         153 kB
+├ ƒ /products/[slug]                        6.9 kB          152 kB
+├ ƒ /profile                                7.61 kB         150 kB
+├ ○ /register                               3.82 kB         141 kB
+├ ○ /robots.txt                             0 B                0 B
+├ ƒ /seller/analytics                       4.33 kB         137 kB
+├ ƒ /seller/dashboard                       5.36 kB         158 kB
+├ ƒ /seller/products                        5.68 kB         149 kB
+├ ƒ /seller/products/new                    7.29 kB         156 kB
+├ ƒ /seller/settings                        4.14 kB         153 kB
+├ ƒ /seller/setup                           2.99 kB         145 kB
+├ ƒ /seller/withdrawals                     3.37 kB         148 kB
+├ ƒ /sellers/[slug]                         5.29 kB         150 kB
+├ ○ /sitemap.xml                            0 B                0 B
+└ ƒ /wishlist                               6.51 kB         151 kB
++ First Load JS shared by all               87.3 kB
+  ├ chunks/2117-a540a161c880c596.js         31.7 kB
+  ├ chunks/fd9d1056-9293e23d45e24ddb.js     53.6 kB
+  └ other shared chunks (total)             2.01 kB
+
+
+ƒ Middleware                                92.2 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

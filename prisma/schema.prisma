@@ -1,0 +1,579 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// =============================================
+// ENUMS
+// =============================================
+
+enum Role {
+  BUYER
+  SELLER
+  AFFILIATOR
+  ADMIN
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  REJECTED
+  ARCHIVED
+}
+
+enum ProductCategory {
+  TEMPLATE
+  UI_KIT
+  ILLUSTRATION
+  ICON_PACK
+  FONT
+  PLUGIN
+  PRESET
+  EBOOK
+  COURSE
+  SOURCE_CODE
+  MUSIC
+  VIDEO
+  PHOTOGRAPHY
+  THREE_D
+  OTHER
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  SETTLEMENT
+  CAPTURE
+  DENY
+  CANCEL
+  EXPIRE
+  FAILURE
+  REFUND
+}
+
+enum WithdrawStatus {
+  PENDING
+  APPROVED
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+enum AffiliateStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum NotificationType {
+  ORDER
+  PAYMENT
+  PRODUCT
+  AFFILIATE
+  SYSTEM
+  REVIEW
+}
+
+// =============================================
+// USER & AUTH
+// =============================================
+
+model User {
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  emailVerified     DateTime?
+  image             String?
+  password          String?
+  role              Role      @default(BUYER)
+  isActive          Boolean   @default(true)
+  isBanned          Boolean   @default(false)
+  bannedReason      String?
+  bannedUntil       DateTime? // null = permanen, ada tanggal = sementara
+  phone             String?
+  bio               String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  accounts          Account[]
+  sessions          Session[]
+  sellerProfile     SellerProfile?
+  affiliatorProfile AffiliatorProfile?
+  buyerProfile      BuyerProfile?
+  orders            Order[]
+  reviews           Review[]
+  wishlist          Wishlist[]
+  cart              CartItem[]
+  notifications     Notification[]
+  addressess        Address[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// =============================================
+// BUYER PROFILE
+// =============================================
+
+model BuyerProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  totalSpent    Float    @default(0)
+  totalOrders   Int      @default(0)
+  loyaltyPoints Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("buyer_profiles")
+}
+
+model Address {
+  id           String   @id @default(cuid())
+  userId       String
+  label        String   // Home, Office, etc
+  fullName     String
+  phone        String
+  address      String
+  city         String
+  province     String
+  postalCode   String
+  country      String   @default("Indonesia")
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+}
+
+// =============================================
+// SELLER PROFILE
+// =============================================
+
+model SellerProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  storeName       String    @unique
+  storeSlug       String    @unique
+  storeDescription String?
+  storeLogo       String?
+  storeBanner     String?
+  storeEmail      String?
+  storePhone      String?
+  website         String?
+  isVerified      Boolean   @default(false)
+  isActive        Boolean   @default(true)
+  totalRevenue    Float     @default(0)
+  totalSales      Int       @default(0)
+  totalProducts   Int       @default(0)
+  rating          Float     @default(0)
+  ratingCount     Int       @default(0)
+  bankName        String?
+  bankAccountName String?
+  bankAccountNo   String?
+  balance         Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products        Product[]
+  withdrawals     Withdrawal[]
+
+  @@map("seller_profiles")
+}
+
+// =============================================
+// AFFILIATOR PROFILE
+// =============================================
+
+model AffiliatorProfile {
+  id              String          @id @default(cuid())
+  userId          String          @unique
+  referralCode    String          @unique
+  status          AffiliateStatus @default(PENDING)
+  commissionRate  Float           @default(0.10) // 10% default
+  totalEarnings   Float           @default(0)
+  totalClicks     Int             @default(0)
+  totalConversions Int            @default(0)
+  balance         Float           @default(0)
+  bankName        String?
+  bankAccountName String?
+  bankAccountNo   String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  affiliateLinks  AffiliateLink[]
+  commissions     AffiliateCommission[]
+  withdrawals     Withdrawal[]
+
+  @@map("affiliator_profiles")
+}
+
+model AffiliateLink {
+  id              String    @id @default(cuid())
+  affiliatorId    String
+  productId       String
+  slug            String    @unique
+  clicks          Int       @default(0)
+  conversions     Int       @default(0)
+  earnings        Float     @default(0)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  affiliator      AffiliatorProfile @relation(fields: [affiliatorId], references: [id], onDelete: Cascade)
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  clicks_log      AffiliateLinkClick[]
+
+  @@map("affiliate_links")
+}
+
+model AffiliateLinkClick {
+  id          String    @id @default(cuid())
+  linkId      String
+  ip          String?
+  userAgent   String?
+  referer     String?
+  converted   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  link        AffiliateLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@map("affiliate_link_clicks")
+}
+
+model AffiliateCommission {
+  id            String    @id @default(cuid())
+  affiliatorId  String
+  orderId       String
+  productId     String
+  amount        Float
+  rate          Float
+  status        WithdrawStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+
+  affiliator    AffiliatorProfile @relation(fields: [affiliatorId], references: [id], onDelete: Cascade)
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product       Product   @relation(fields: [productId], references: [id])
+
+  @@map("affiliate_commissions")
+}
+
+// =============================================
+// PRODUCTS
+// =============================================
+
+model Product {
+  id              String          @id @default(cuid())
+  sellerId        String
+  title           String
+  slug            String          @unique
+  description     String          @db.Text
+  shortDescription String?
+  price           Float
+  discountPrice   Float?
+  category        ProductCategory
+  tags            String[]
+  thumbnail       String
+  images          String[]
+  previewUrl      String?
+  downloadUrl     String?         // encrypted/signed URL
+  fileSize        String?
+  fileType        String?
+  status          ProductStatus   @default(DRAFT)
+  isDigitalDownload Boolean       @default(true)
+  totalSales      Int             @default(0)
+  totalViews      Int             @default(0)
+  rating          Float           @default(0)
+  ratingCount     Int             @default(0)
+  commissionRate  Float           @default(0.10)
+  isFeatured      Boolean         @default(false)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  seller          SellerProfile   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
+  reviews         Review[]
+  wishlist        Wishlist[]
+  cartItems       CartItem[]
+  affiliateLinks  AffiliateLink[]
+  commissions     AffiliateCommission[]
+
+  @@map("products")
+}
+
+// =============================================
+// CART & ORDERS
+// =============================================
+
+model CartItem {
+  id          String   @id @default(cuid())
+  userId      String
+  productId   String
+  quantity    Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  userId          String
+  subtotal        Float
+  discountAmount  Float         @default(0)
+  totalAmount     Float
+  status          OrderStatus   @default(PENDING)
+  couponCode      String?
+  affiliateCode   String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
+  payment         Payment?
+  commissions     AffiliateCommission[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String
+  price       Float
+  quantity    Int      @default(1)
+  downloadUrl String?
+  downloaded  Boolean  @default(false)
+
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// =============================================
+// PAYMENTS
+// =============================================
+
+model Payment {
+  id              String        @id @default(cuid())
+  orderId         String        @unique
+  transactionId   String?       @unique
+  paymentMethod   String?
+  amount          Float
+  status          PaymentStatus @default(PENDING)
+  snapToken       String?
+  snapRedirectUrl String?
+  rawResponse     Json?
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// =============================================
+// WITHDRAWALS
+// =============================================
+
+model Withdrawal {
+  id              String         @id @default(cuid())
+  sellerId        String?
+  affiliatorId    String?
+  amount          Float
+  bankName        String
+  bankAccountName String
+  bankAccountNo   String
+  status          WithdrawStatus @default(PENDING)
+  adminNote       String?
+  processedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  seller          SellerProfile?      @relation(fields: [sellerId], references: [id])
+  affiliator      AffiliatorProfile?  @relation(fields: [affiliatorId], references: [id])
+
+  @@map("withdrawals")
+}
+
+// =============================================
+// REVIEWS
+// =============================================
+
+model Review {
+  id          String   @id @default(cuid())
+  userId      String
+  productId   String
+  rating      Int      // 1-5
+  comment     String?
+  isVerified  Boolean  @default(false) // verified purchase
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("reviews")
+}
+
+// =============================================
+// WISHLIST
+// =============================================
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
+
+// =============================================
+// NOTIFICATIONS
+// =============================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  data      Json?
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// =============================================
+// COUPONS
+// =============================================
+
+model Coupon {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  description   String?
+  discountType  String   // PERCENTAGE | FIXED
+  discountValue Float
+  minPurchase   Float    @default(0)
+  maxDiscount   Float?
+  usageLimit    Int?
+  usageCount    Int      @default(0)
+  isActive      Boolean  @default(true)
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("coupons")
+}
+
+// =============================================
+// SITE SETTINGS
+// =============================================
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string")
+  group     String   @default("general")
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// =============================================
+// AUDIT LOG (Admin)
+// =============================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String
+  entity      String
+  entityId    String?
+  oldData     Json?
+  newData     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@map("audit_logs")
+}
